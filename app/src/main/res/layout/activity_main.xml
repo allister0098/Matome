@@ -24,7 +24,20 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/tool_bar"/>
+            android:layout_below="@id/tool_bar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <fragment
+                    android:name="com.example.syo.listfragment.Fragment.ListFragment"
+                    android:id="@+id/list_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+        </FrameLayout>
 
     </RelativeLayout>
 
