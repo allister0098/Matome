@@ -93,6 +93,19 @@ public class RssParserTask extends AsyncTask<String, Integer, ListAdapter> {
                                 currentItem.setTitle(parser.nextText());
                             } else if (tag.equals("description")) {
                                 currentItem.setDescription(parser.nextText());
+                            } else if (tag.equals("encoded")) {
+//                                int token = parser.nextToken();
+//                                while(token != XmlPullParser.CDSECT) {
+//                                    token = parser.nextToken();
+//                                }
+                                String cdata = parser.nextText();
+                                Log.i("cdata", cdata);
+                                String result = cdata.substring(cdata.indexOf("src=\"")+5, cdata.indexOf("</a")-2);
+                                Log.i("INFO", result);
+                                if (result.contains("\"")) {
+                                    result = result.replace(result.substring(result.indexOf("\""), result.length()), "");
+                                }
+                                currentItem.setImgUrl(result);
                             }
                         }
                         break;

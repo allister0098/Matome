@@ -3,6 +3,7 @@ package com.example.syo.listfragment.Adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.syo.listfragment.Manager.ImageUrlTask;
 import com.example.syo.listfragment.Model.Item;
 import com.example.syo.listfragment.R;
 
@@ -51,8 +53,13 @@ public class ListAdapter extends ArrayAdapter<Item> {
             mTitle = (TextView) view.findViewById(R.id.item_title);
             mTitle.setText(title);
 
-//            String imgUrl = item.getImgUrl().toString();
-//
+            String imgUrl = item.getImgUrl().toString();
+            mImage = (ImageView)view.findViewById(R.id.item_img);
+            Log.d("imageurl", imgUrl);
+
+            ImageUrlTask imageTask = new ImageUrlTask(mImage);
+            imageTask.execute(imgUrl);
+
 //            try {
 //                // 画像のURLを入力
 //                imageUrl = new URL(imgUrl);
