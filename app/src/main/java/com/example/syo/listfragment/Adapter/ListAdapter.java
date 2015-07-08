@@ -16,6 +16,7 @@ import com.example.syo.listfragment.R;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 
 /**
  * Created by syo on 2015/07/05.
@@ -28,8 +29,8 @@ public class ListAdapter extends ArrayAdapter<Item> {
     private InputStream iStream;
     private Bitmap bitmap;
 
-    public ListAdapter(Context context) {
-        super(context, 0);
+    public ListAdapter(Context context, List<Item> objects) {
+        super(context, 0, objects);
         mInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -50,22 +51,22 @@ public class ListAdapter extends ArrayAdapter<Item> {
             mTitle = (TextView) view.findViewById(R.id.item_title);
             mTitle.setText(title);
 
-            String imgUrl = item.getImgUrl().toString();
-
-            try {
-                // 画像のURLを入力
-                imageUrl = new URL(imgUrl);
-                // インプットストリームで画像を読み込む
-                iStream = imageUrl.openStream();
-                // 読み込んだファイルをビットマップに変換
-                bitmap = BitmapFactory.decodeStream(iStream);
-                // ビットマップをImageViewに設定
-                mImage.setImageBitmap(bitmap);
-                // インプットストリームを閉じる
-                iStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            String imgUrl = item.getImgUrl().toString();
+//
+//            try {
+//                // 画像のURLを入力
+//                imageUrl = new URL(imgUrl);
+//                // インプットストリームで画像を読み込む
+//                iStream = imageUrl.openStream();
+//                // 読み込んだファイルをビットマップに変換
+//                bitmap = BitmapFactory.decodeStream(iStream);
+//                // ビットマップをImageViewに設定
+//                mImage.setImageBitmap(bitmap);
+//                // インプットストリームを閉じる
+//                iStream.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
         }
         return view;

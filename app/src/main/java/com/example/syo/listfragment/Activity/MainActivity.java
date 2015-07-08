@@ -14,16 +14,24 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.syo.listfragment.Adapter.ListAdapter;
+import com.example.syo.listfragment.Fragment.ListFragment;
+import com.example.syo.listfragment.Manager.RssParserTask;
+import com.example.syo.listfragment.Model.Content;
+import com.example.syo.listfragment.Model.Item;
 import com.example.syo.listfragment.R;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
-
     private ActionBarDrawerToggle mDrawerToggle;
 
-    private ListView mListView;
+    private ArrayList<Item> mItems;
+    private ListAdapter mAdapter;
+    private ListFragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +73,12 @@ public class MainActivity extends AppCompatActivity {
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+//        mItems = new ArrayList<Item>();
+//        mFragment = new ListFragment();
+//        mAdapter = new ListAdapter(this, mItems);
+//        RssParserTask task = new RssParserTask(this, mFragment, mAdapter);
+//        task.execute(Content.MIND_MATOME);
     }
 
     @Override
@@ -91,5 +105,9 @@ public class MainActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    public ListAdapter getAdapter() {
+        return mAdapter;
     }
 }
