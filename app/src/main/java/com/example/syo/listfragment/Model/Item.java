@@ -1,5 +1,7 @@
 package com.example.syo.listfragment.Model;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 
 /**
@@ -13,7 +15,8 @@ public class Item implements Serializable {
     // 記事のURL
     private CharSequence mUrl;
     // 画像のURL
-    private CharSequence imgUrl;
+//    private CharSequence imgUrl;
+    private Bitmap image;
 
     public CharSequence getTitle() {
         return mTitle;
@@ -35,11 +38,19 @@ public class Item implements Serializable {
 
     public void setUrl(CharSequence Url) {mUrl = Url;}
 
-    public void setImgUrl(CharSequence imgUrl) {
-        this.imgUrl = imgUrl;
+    public void setImage(Bitmap resource) {
+        image = resource;
     }
 
-    public CharSequence getImgUrl() {
-        return imgUrl;
+    public Bitmap getImage() {
+        return image;
     }
+
+//    public void setImgUrl(CharSequence imgUrl) {
+//        this.imgUrl = imgUrl;
+//    }
+//
+//    public CharSequence getImgUrl() {
+//        return imgUrl;
+//    }
 }

@@ -12,4 +12,5 @@
     <string name="navigation_item_2">Navigation Item 2</string>
     <string name="navigation_sub_item_1">Navigation Sub Item 1</string>
     <string name="navigation_sub_item_2">Navigation Sub Item 2</string>
+    <string name="title_activity_web_detail">WebDetailActivity</string>
 </resources>

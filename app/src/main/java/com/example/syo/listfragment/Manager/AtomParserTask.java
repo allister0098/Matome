@@ -2,7 +2,6 @@ package com.example.syo.listfragment.Manager;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.util.Xml;
 
@@ -12,6 +11,7 @@ import com.example.syo.listfragment.Fragment.ListFragment;
 import com.example.syo.listfragment.Model.Item;
 
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,9 +20,9 @@ import java.net.URL;
 import java.util.List;
 
 /**
- * Created by syo on 2015/07/06.
+ * Created by syo on 2015/07/10.
  */
-public class RssParserTask extends AsyncTask<String, Integer, ListAdapter> {
+public class AtomParserTask extends AsyncTask<String, Integer, ListAdapter> {
     private MainActivity mActivity;
     private List<Item> items;
     private ProgressDialog mProgressDialog;
@@ -31,7 +31,7 @@ public class RssParserTask extends AsyncTask<String, Integer, ListAdapter> {
     private ListAdapter mAdapter;
 
     // コンストラクタ
-    public RssParserTask(MainActivity activity, ListFragment fragment, ListAdapter adapter) {
+    public AtomParserTask(MainActivity activity, ListFragment fragment, ListAdapter adapter) {
         mActivity = activity;
         this.fragment = fragment;
         mAdapter = adapter;
@@ -53,7 +53,9 @@ public class RssParserTask extends AsyncTask<String, Integer, ListAdapter> {
             // HTTP経由でアクセスし、InputStreamを取得する
             URL url = new URL(params[0]);
             InputStream is = url.openConnection().getInputStream();
-            result = parseXml(is);
+
+            result = parseAtom(is);
+
             is.close();
             // URLの中身をLogで表示
             Log.d("URL", url.toString());
@@ -62,6 +64,7 @@ public class RssParserTask extends AsyncTask<String, Integer, ListAdapter> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return result;
     }
 
@@ -74,8 +77,8 @@ public class RssParserTask extends AsyncTask<String, Integer, ListAdapter> {
         mProgressDialog.dismiss();
     }
 
-    // XMLをパースする
-    private ListAdapter parseXml(InputStream is) {
+    // Atomをパースする
+    private ListAdapter parseAtom(InputStream is) {
         XmlPullParser parser = Xml.newPullParser();
         try {
             parser.setInput(is, null);
@@ -86,26 +89,31 @@ public class RssParserTask extends AsyncTask<String, Integer, ListAdapter> {
                 switch (eventType) {
                     case XmlPullParser.START_TAG :
                         tag = parser.getName();
-                        if (tag.equals("item")) {
+                        if (tag.equals("entry")) {
                             currentItem = new Item();
                         } else if (currentItem != null) {
                             if (tag.equals("title")) {
                                 currentItem.setTitle(parser.nextText());
                             } else if (tag.equals("description")) {
                                 currentItem.setDescription(parser.nextText());
-                            } else if (tag.equals("encoded")) {
-//                                int token = parser.nextToken();
-//                                while(token != XmlPullParser.CDSECT) {
-//                                    token = parser.nextToken();
-//                                }
+                            } else if (tag.equals("content")) {
+                                // 属性値から記事のURLを取得
+                                Log.d("aaaaaaaa", "asdfasdfasdfads");
+//                                String url = parser.getAttributeValue("xml", "base");
+                                String url = "null";
+//                                Log.d("BASE", parser.getAttributeValue("xml", "base"));
+                                // <![CDATA[ の中身を取得
                                 String cdata = parser.nextText();
-                                Log.i("cdata", cdata);
-                                String result = cdata.substring(cdata.indexOf("src=\"")+5, cdata.indexOf("</a")-2);
-                                Log.i("INFO", result);
+                                // cdataから画像URLを抽出
+                                String result = cdata.substring(cdata.indexOf("img src=\"")+9, cdata.indexOf("</a")-2);
+                                Log.d("IMAGE", result);
+                                // 画像URLをリファクタリング
                                 if (result.contains("\"")) {
                                     result = result.replace(result.substring(result.indexOf("\""), result.length()), "");
                                 }
-                                currentItem.setImgUrl(result);
+                                // それぞれのURLをitemにセット
+//                                currentItem.setImgUrl(result);
+                                currentItem.setUrl(url);
                             }
                         }
                         break;
@@ -118,9 +126,12 @@ public class RssParserTask extends AsyncTask<String, Integer, ListAdapter> {
                 }
                 eventType = parser.next();
             }
-        } catch (Exception e) {
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
         return mAdapter;
     }
 }

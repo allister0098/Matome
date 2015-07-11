@@ -1,5 +1,7 @@
 package com.example.syo.listfragment.Activity;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -10,13 +12,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.syo.listfragment.Adapter.ListAdapter;
 import com.example.syo.listfragment.Fragment.ListFragment;
-import com.example.syo.listfragment.Manager.RssParserTask;
 import com.example.syo.listfragment.Model.Content;
 import com.example.syo.listfragment.Model.Item;
 import com.example.syo.listfragment.R;
@@ -29,14 +28,14 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView mNavigationView;
     private ActionBarDrawerToggle mDrawerToggle;
 
-    private ArrayList<Item> mItems;
-    private ListAdapter mAdapter;
-    private ListFragment mFragment;
+    private ListFragment fragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
@@ -46,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -67,6 +67,22 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
 
+//                switch (itemId) {
+//                    case R.id.navigation_item_1 :
+//                        fragment = new ListFragment(Content.MIND_MATOME);
+//                        getFragmentManager().beginTransaction().replace(R.id.list_fragment, fragment).commit();
+//                        menuItem.setChecked(true);
+//                        mDrawerLayout.closeDrawers();
+//                        return true;
+//
+//                    case R.id.navigation_item_2 :
+//                        fragment = new ListFragment(Content.PHILOSOPHY_NEWS);
+//                        getFragmentManager().beginTransaction().replace(R.id.list_fragment, fragment).commit();
+//                        menuItem.setChecked(true);
+//                        mDrawerLayout.closeDrawers();
+//                        return true;
+//                }
+
                 return false;
             }
         });
@@ -74,11 +90,6 @@ public class MainActivity extends AppCompatActivity {
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-//        mItems = new ArrayList<Item>();
-//        mFragment = new ListFragment();
-//        mAdapter = new ListAdapter(this, mItems);
-//        RssParserTask task = new RssParserTask(this, mFragment, mAdapter);
-//        task.execute(Content.MIND_MATOME);
     }
 
     @Override
@@ -107,7 +118,4 @@ public class MainActivity extends AppCompatActivity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    public ListAdapter getAdapter() {
-        return mAdapter;
-    }
 }

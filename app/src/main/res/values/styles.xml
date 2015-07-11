@@ -11,6 +11,7 @@
         <item name="android:textColor">@color/txt_main</item>
 
         <item name="drawerArrowStyle">@style/AppDrawerArrowToggle</item>
+
     </style>
 
     <style name="AppDrawerArrowToggle" parent="Base.Widget.AppCompat.DrawerArrowToggle">
