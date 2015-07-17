@@ -7,7 +7,7 @@ import android.util.Xml;
 
 import com.example.syo.listfragment.Activity.MainActivity;
 import com.example.syo.listfragment.Adapter.ListAdapter;
-import com.example.syo.listfragment.Fragment.ListFragment;
+import com.example.syo.listfragment.Fragment.AtomFragment;
 import com.example.syo.listfragment.Model.Item;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -26,12 +26,12 @@ public class AtomParserTask extends AsyncTask<String, Integer, ListAdapter> {
     private MainActivity mActivity;
     private List<Item> items;
     private ProgressDialog mProgressDialog;
-    private ListFragment fragment;
+    private AtomFragment fragment;
     private RuntimeException error;
     private ListAdapter mAdapter;
 
     // コンストラクタ
-    public AtomParserTask(MainActivity activity, ListFragment fragment, ListAdapter adapter) {
+    public AtomParserTask(MainActivity activity, AtomFragment fragment, ListAdapter adapter) {
         mActivity = activity;
         this.fragment = fragment;
         mAdapter = adapter;
@@ -44,10 +44,12 @@ public class AtomParserTask extends AsyncTask<String, Integer, ListAdapter> {
         mProgressDialog = new ProgressDialog(mActivity);
         mProgressDialog.setMessage("Now Loading...");
         mProgressDialog.show();
+
     }
 
     @Override
     protected ListAdapter doInBackground(String... params) {
+        Log.d("Atom:START", "start");
         ListAdapter result = null;
         try {
             // HTTP経由でアクセスし、InputStreamを取得する
@@ -75,6 +77,7 @@ public class AtomParserTask extends AsyncTask<String, Integer, ListAdapter> {
         result.notifyDataSetChanged();
         // プログレスダイアログを消す
         mProgressDialog.dismiss();
+        Log.d("Atom:END", "finish!!!!!!!!!");
     }
 
     // Atomをパースする
@@ -97,29 +100,31 @@ public class AtomParserTask extends AsyncTask<String, Integer, ListAdapter> {
                             } else if (tag.equals("description")) {
                                 currentItem.setDescription(parser.nextText());
                             } else if (tag.equals("content")) {
+
                                 // 属性値から記事のURLを取得
-                                Log.d("aaaaaaaa", "asdfasdfasdfads");
-//                                String url = parser.getAttributeValue("xml", "base");
-                                String url = "null";
-//                                Log.d("BASE", parser.getAttributeValue("xml", "base"));
+                                String url = parser.getAttributeValue(null, "base");
                                 // <![CDATA[ の中身を取得
                                 String cdata = parser.nextText();
+                                // cdataの改行文字を削除
+                                if (cdata.contains("\n")) {
+                                    cdata = cdata.replace("\n", "");
+                            }
+
                                 // cdataから画像URLを抽出
-                                String result = cdata.substring(cdata.indexOf("img src=\"")+9, cdata.indexOf("</a")-2);
+                                String result = cdata.substring(cdata.indexOf("src=\"")+5, cdata.indexOf("alt")-2);
                                 Log.d("IMAGE", result);
-                                // 画像URLをリファクタリング
-                                if (result.contains("\"")) {
-                                    result = result.replace(result.substring(result.indexOf("\""), result.length()), "");
-                                }
+
+
                                 // それぞれのURLをitemにセット
-//                                currentItem.setImgUrl(result);
+                                currentItem.setImgUrl(result);
                                 currentItem.setUrl(url);
+
                             }
                         }
                         break;
                     case XmlPullParser.END_TAG :
                         tag = parser.getName();
-                        if (tag.equals("item")) {
+                        if (tag.equals("entry")) {
                             mAdapter.add(currentItem);
                         }
                         break;
@@ -134,4 +139,6 @@ public class AtomParserTask extends AsyncTask<String, Integer, ListAdapter> {
 
         return mAdapter;
     }
+
+
 }

@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.example.syo.listfragment.Model.Item;
 import com.example.syo.listfragment.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.jar.Attributes;
 
@@ -34,6 +35,7 @@ public class ItemLayout extends RelativeLayout {
 
     public void bindView(Item item) {
         mTitleView.setText(item.getTitle());
-        mImageView.setImageBitmap(item.getImage());
+//        mImageView.setImageBitmap(item.getImage());
+        Picasso.with(getContext()).load(item.getImgUrl().toString()).into(mImageView);
     }
 }

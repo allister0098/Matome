@@ -1,7 +1,9 @@
 package com.example.syo.listfragment.Fragment;
 
 import android.app.Activity;
+import android.app.ListFragment;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import android.widget.ListView;
 import com.example.syo.listfragment.Activity.MainActivity;
 import com.example.syo.listfragment.Activity.WebDetailActivity;
 import com.example.syo.listfragment.Adapter.ListAdapter;
+import com.example.syo.listfragment.Manager.AtomParserTask;
 import com.example.syo.listfragment.Manager.RdfParserTask;
 import com.example.syo.listfragment.Model.Content;
 import com.example.syo.listfragment.Model.Item;
@@ -20,19 +23,21 @@ import com.example.syo.listfragment.R;
 import java.util.ArrayList;
 
 /**
- * Created by syo on 2015/07/05.
+ * Created by syo on 2015/07/15.
  */
-public class ListFragment extends android.app.ListFragment {
+public class AtomFragment extends ListFragment {
     private MainActivity mActivity;
-    private RdfParserTask task;
+    private RdfParserTask rdfTask;
+    private AtomParserTask atomTask;
     private ArrayList<Item> mItems;
     private String url;
+    private LayoutInflater mInflater;
 
-    public ListFragment() {
+    public AtomFragment() {
         url = null;
     }
 
-    public ListFragment(String url) {
+    public AtomFragment(String url) {
         this.url = url;
     }
 
@@ -50,8 +55,10 @@ public class ListFragment extends android.app.ListFragment {
 
         mItems = new ArrayList<>();
         ListAdapter adapter = new ListAdapter(mActivity, mItems);
-        task = new RdfParserTask(mActivity, this, adapter);
-        task.execute(Content.MIND_MATOME);
+
+        atomTask = new AtomParserTask(mActivity, this, adapter);
+        atomTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
+
     }
 
     @Override
@@ -60,10 +67,15 @@ public class ListFragment extends android.app.ListFragment {
     }
 
     @Override
-    public void onListItemClick (ListView l, View v, int position, long id) {
+    public void onDetach() {
+        super.onDetach();
+        Log.d("DETACH", "ondetach");
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
         Intent intent = new Intent(mActivity, WebDetailActivity.class);
         intent.putExtra("URL", mItems.get(position).getUrl());
         startActivity(intent);
     }
-
 }

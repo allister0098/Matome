@@ -1,15 +1,13 @@
 package com.example.syo.listfragment.Manager;
 
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.util.Xml;
 
 import com.example.syo.listfragment.Activity.MainActivity;
 import com.example.syo.listfragment.Adapter.ListAdapter;
-import com.example.syo.listfragment.Fragment.ListFragment;
+import com.example.syo.listfragment.Fragment.RdfFragment;
 import com.example.syo.listfragment.Model.Item;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -25,14 +23,12 @@ import java.util.List;
  */
 public class RdfParserTask extends AsyncTask<String, Integer, ListAdapter> {
     private MainActivity mActivity;
-    private List<Item> items;
     private ProgressDialog mProgressDialog;
-    private ListFragment fragment;
-    private RuntimeException error;
+    private RdfFragment fragment;
     private ListAdapter mAdapter;
 
     // コンストラクタ
-    public RdfParserTask(MainActivity activity, ListFragment fragment, ListAdapter adapter) {
+    public RdfParserTask(MainActivity activity, RdfFragment fragment, ListAdapter adapter) {
         mActivity = activity;
         this.fragment = fragment;
         mAdapter = adapter;
@@ -78,6 +74,7 @@ public class RdfParserTask extends AsyncTask<String, Integer, ListAdapter> {
         // プログレスダイアログを消す
         mProgressDialog.dismiss();
         Log.d("RDF:END", "finish!!!");
+
     }
 
     // Rdfをパースする
@@ -113,7 +110,7 @@ public class RdfParserTask extends AsyncTask<String, Integer, ListAdapter> {
                                 }
 
                                 // それぞれのURLをitemにセット
-                                currentItem.setImage(parseImage(result));
+                                currentItem.setImgUrl(result);
                                 currentItem.setUrl(url);
                             }
                         }
@@ -133,17 +130,6 @@ public class RdfParserTask extends AsyncTask<String, Integer, ListAdapter> {
         return mAdapter;
     }
 
-    private Bitmap parseImage(String result) throws IOException {
-        URL imageUrl = new URL(result);
-        // インプットストリームで画像を読み込む
-        InputStream is = imageUrl.openStream();
-        // 読み込んだファイルをビットマップに変換
-        Bitmap bitmap = BitmapFactory.decodeStream(is);
-        // インプットストリームを閉じる
-        is.close();
-
-        return bitmap;
-    }
 
 
 

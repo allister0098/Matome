@@ -26,17 +26,15 @@ public class ListAdapter extends ArrayAdapter<Item> {
     // 1行ごとのビューを生成する
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ItemLayout view;
+        ItemLayout view = null;
 
         if (convertView == null) {
-            view = (ItemLayout)mInflater.inflate(R.layout.item_row, null);
+            view = (ItemLayout) mInflater.inflate(R.layout.item_row, null);
         } else {
-            view = (ItemLayout)convertView;
+            view = (ItemLayout) convertView;
         }
-        // 現在参照しているリストの位置からItemを取得する
-        Item item = this.getItem(position);
         // Itemとitem_rowを紐づける
-        view.bindView(item);
+        view.bindView(getItem(position));
 
         return view;
     }
