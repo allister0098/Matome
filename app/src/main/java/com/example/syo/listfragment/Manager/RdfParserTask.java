@@ -7,7 +7,7 @@ import android.util.Xml;
 
 import com.example.syo.listfragment.Activity.MainActivity;
 import com.example.syo.listfragment.Adapter.ListAdapter;
-import com.example.syo.listfragment.Fragment.RdfFragment;
+import com.example.syo.listfragment.Fragment.RssFragment;
 import com.example.syo.listfragment.Model.Item;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 
 /**
  * Created by syo on 2015/07/06.
@@ -24,11 +23,11 @@ import java.util.List;
 public class RdfParserTask extends AsyncTask<String, Integer, ListAdapter> {
     private MainActivity mActivity;
     private ProgressDialog mProgressDialog;
-    private RdfFragment fragment;
+    private RssFragment fragment;
     private ListAdapter mAdapter;
 
     // コンストラクタ
-    public RdfParserTask(MainActivity activity, RdfFragment fragment, ListAdapter adapter) {
+    public RdfParserTask(MainActivity activity, RssFragment fragment, ListAdapter adapter) {
         mActivity = activity;
         this.fragment = fragment;
         mAdapter = adapter;
@@ -94,8 +93,6 @@ public class RdfParserTask extends AsyncTask<String, Integer, ListAdapter> {
                         } else if (currentItem != null) {
                             if (tag.equals("title")) {
                                 currentItem.setTitle(parser.nextText());
-                            } else if (tag.equals("description")) {
-                                currentItem.setDescription(parser.nextText());
                             } else if (tag.equals("encoded")) {
 
                                 // <![CDATA[ の中身を取得

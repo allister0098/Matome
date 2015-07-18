@@ -1,5 +1,6 @@
 package com.example.syo.listfragment.Manager;
 
+import android.app.ListFragment;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -7,7 +8,6 @@ import android.util.Xml;
 
 import com.example.syo.listfragment.Activity.MainActivity;
 import com.example.syo.listfragment.Adapter.ListAdapter;
-import com.example.syo.listfragment.Fragment.AtomFragment;
 import com.example.syo.listfragment.Model.Item;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -24,14 +24,12 @@ import java.util.List;
  */
 public class AtomParserTask extends AsyncTask<String, Integer, ListAdapter> {
     private MainActivity mActivity;
-    private List<Item> items;
     private ProgressDialog mProgressDialog;
-    private AtomFragment fragment;
-    private RuntimeException error;
+    private ListFragment fragment;
     private ListAdapter mAdapter;
 
     // コンストラクタ
-    public AtomParserTask(MainActivity activity, AtomFragment fragment, ListAdapter adapter) {
+    public AtomParserTask(MainActivity activity, ListFragment fragment, ListAdapter adapter) {
         mActivity = activity;
         this.fragment = fragment;
         mAdapter = adapter;
@@ -97,8 +95,6 @@ public class AtomParserTask extends AsyncTask<String, Integer, ListAdapter> {
                         } else if (currentItem != null) {
                             if (tag.equals("title")) {
                                 currentItem.setTitle(parser.nextText());
-                            } else if (tag.equals("description")) {
-                                currentItem.setDescription(parser.nextText());
                             } else if (tag.equals("content")) {
 
                                 // 属性値から記事のURLを取得
@@ -108,17 +104,14 @@ public class AtomParserTask extends AsyncTask<String, Integer, ListAdapter> {
                                 // cdataの改行文字を削除
                                 if (cdata.contains("\n")) {
                                     cdata = cdata.replace("\n", "");
-                            }
-
+                                }
                                 // cdataから画像URLを抽出
                                 String result = cdata.substring(cdata.indexOf("src=\"")+5, cdata.indexOf("alt")-2);
                                 Log.d("IMAGE", result);
 
-
                                 // それぞれのURLをitemにセット
                                 currentItem.setImgUrl(result);
                                 currentItem.setUrl(url);
-
                             }
                         }
                         break;

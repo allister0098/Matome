@@ -14,7 +14,6 @@ public class Item implements Serializable {
     private CharSequence mUrl;
     // 画像のURL
     private CharSequence imgUrl;
-//    private Bitmap image;
 
     public CharSequence getTitle() {
         return mTitle;

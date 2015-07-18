@@ -4,11 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.example.syo.listfragment.Activity.MainActivity;
@@ -25,20 +24,20 @@ import java.util.ArrayList;
 /**
  * Created by syo on 2015/07/05.
  */
-public class RdfFragment extends android.app.ListFragment {
+public class RssFragment extends android.app.ListFragment implements SwipeRefreshLayout.OnRefreshListener {
     private MainActivity mActivity;
     private RdfParserTask rdfTask;
     private AtomParserTask atomTask;
     private ArrayList<Item> mItems;
     private String url;
-    private LayoutInflater mInflater;
     private ListAdapter adapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    public RdfFragment() {
+    public RssFragment() {
         url = null;
     }
 
-    public RdfFragment(String url) {
+    public RssFragment(String url) {
         this.url = url;
     }
 
@@ -57,27 +56,33 @@ public class RdfFragment extends android.app.ListFragment {
         mItems = new ArrayList<>();
         adapter = new ListAdapter(mActivity, mItems);
         rdfTask = new RdfParserTask(mActivity, this, adapter);
+        atomTask = new AtomParserTask(mActivity, this, adapter);
 
         if (url == null) {
             rdfTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Content.MIND_MATOME);
-        } else if (url.equals(Content.MIND_MATOME)) {
-            // RSSの形式がrdfだったとき
-            rdfTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
+        } else if (url.contains("atom")) {
+            switch (url) {
+                case Content.PHILOSOPHY_NEWS :
+                    atomTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Content.PHILOSOPHY_NEWS);
+                    break;
+            }
+        } else if (url.contains(".rdf")) {
+            switch (url) {
+                case Content.MIND_MATOME :
+                    rdfTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Content.MIND_MATOME);
+                    break;
+            }
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.item_list_fragment, container, false);
-    }
+        View view = inflater.inflate(R.layout.item_list_fragment, container, false);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_widget);
+        mSwipeRefreshLayout.setColorSchemeColors(R.color.color1, R.color.color2, R.color.color3, R.color.color4);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-//        this.setListAdapter(null);
-//        adapter.clear();
-//        adapter = null;
-        Log.d("DETACH", "ondetach");
+        return view;
     }
 
     @Override
@@ -87,4 +92,11 @@ public class RdfFragment extends android.app.ListFragment {
         startActivity(intent);
     }
 
+    @Override
+    public void onRefresh() {
+        // 更新処理を実装する
+        getFragmentManager().beginTransaction().replace(R.id.replace_layout, this).commit();
+        // 更新が終了したらインジケータ非表示
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
 }
