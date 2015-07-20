@@ -17,6 +17,9 @@
         <item
             android:id="@+id/navigation_item_5"
             android:title="@string/bip_blog"/>
+        <item
+            android:id="@+id/navigation_item_6"
+            android:title="@string/hachima_blog"/>
 
     </group>
 </menu>

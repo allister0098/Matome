@@ -9,6 +9,7 @@ public class Content {
     public static final String ALFA_MOSAIC = "http://alfalfalfa.com/index.rdf";
     public static final String GAME_NEWS_JIN = "http://jin115.com/index.rdf";
     public static final String BIP_BLOG = "http://bipblog.com/index.rdf";
+    public static final String HACHIMA_BLOG = "http://blog.esuteru.com/index.rdf";
 
     // 画像が見つからなかったときのためのURL
     public static final String NO_IMAGE = "http://img01.militaryblog.jp/usr/fortress/noimage_left.jpg";

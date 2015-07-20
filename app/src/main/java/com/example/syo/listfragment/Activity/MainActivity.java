@@ -11,7 +11,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -111,6 +110,17 @@ public class MainActivity extends AppCompatActivity {
                         menuItem.setChecked(true);
                         mDrawerLayout.closeDrawers();
                         mTitle = getString(R.string.bip_blog);
+
+                        break;
+
+                    case R.id.navigation_item_6 :
+                        fragment = new RssFragment(Content.HACHIMA_BLOG);
+                        // headerのバックグランド変更
+                        view.setBackgroundResource(R.mipmap.hachima_blog);
+                        // DrawerLayoutを閉じる
+                        menuItem.setChecked(true);
+                        mDrawerLayout.closeDrawers();
+                        mTitle = getString(R.string.hachima_blog);
 
                         break;
                 }
