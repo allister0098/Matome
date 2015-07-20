@@ -72,7 +72,9 @@ public class RdfParserTask extends AsyncTask<String, Integer, ListAdapter> {
     @Override
     protected void onPostExecute(ListAdapter result) {
         fragment.setListAdapter(result);
-        result.notifyDataSetChanged();
+        if (result != null) {
+            result.notifyDataSetChanged();
+        }
         // プログレスダイアログを消す
         mProgressDialog.dismiss();
         Log.d("RDF:END", "finish!!!");

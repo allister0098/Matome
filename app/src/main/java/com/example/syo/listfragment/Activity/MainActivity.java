@@ -1,5 +1,6 @@
 package com.example.syo.listfragment.Activity;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -10,10 +11,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.example.syo.listfragment.Fragment.RssFragment;
+import com.example.syo.listfragment.Manager.Util;
 import com.example.syo.listfragment.Model.Content;
 import com.example.syo.listfragment.R;
 
@@ -39,7 +42,13 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        // Fragment起動
         getFragmentManager().beginTransaction().replace(R.id.replace_layout, new RssFragment()).commit();
+
+        final View view = findViewById(R.id.header);
+        view.setBackgroundResource(R.mipmap.mind_background);
+
+        mTitle = getString(R.string.mind_channel);
 
         // DrawerLayoutの動作
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -50,8 +59,10 @@ public class MainActivity extends AppCompatActivity {
                 int itemId = menuItem.getItemId();
 
                 switch (itemId) {
-                    case R.id.navigation_item_1:
+                    case R.id.navigation_item_1 :
                         fragment = new RssFragment(Content.MIND_MATOME);
+                        // headerのバックグランド変更
+                        view.setBackgroundResource(R.mipmap.mind_background);
                         // DrawerLayoutを閉じる
                         menuItem.setChecked(true);
                         mDrawerLayout.closeDrawers();
@@ -59,8 +70,10 @@ public class MainActivity extends AppCompatActivity {
 
                         break;
 
-                    case R.id.navigation_item_2:
+                    case R.id.navigation_item_2 :
                         fragment = new RssFragment(Content.PHILOSOPHY_NEWS);
+                        // headerのバックグランド変更
+                        view.setBackgroundResource(R.mipmap.philosophy_background);
                         // DrawerLayoutを閉じる
                         menuItem.setChecked(true);
                         mDrawerLayout.closeDrawers();
@@ -68,12 +81,36 @@ public class MainActivity extends AppCompatActivity {
 
                         break;
 
-                    case R.id.navigation_item_3:
+                    case R.id.navigation_item_3 :
                         fragment = new RssFragment(Content.ALFA_MOSAIC);
+                        // headerのバックグランド変更
+                        view.setBackgroundResource(R.mipmap.alfa_background);
                         // DrawerLayoutを閉じる
                         menuItem.setChecked(true);
                         mDrawerLayout.closeDrawers();
                         mTitle = getString(R.string.alfa_mosaic);
+
+                        break;
+
+                    case R.id.navigation_item_4 :
+                        fragment = new RssFragment(Content.GAME_NEWS_JIN);
+                        // headerのバックグランド変更
+                        view.setBackgroundResource(R.mipmap.oreteki_logo);
+                        // DrawerLayoutを閉じる
+                        menuItem.setChecked(true);
+                        mDrawerLayout.closeDrawers();
+                        mTitle = getString(R.string.game_new_jin);
+
+                        break;
+
+                    case R.id.navigation_item_5 :
+                        fragment = new RssFragment(Content.BIP_BLOG);
+                        // headerのバックグランド変更
+                        view.setBackgroundResource(R.mipmap.bip_blog);
+                        // DrawerLayoutを閉じる
+                        menuItem.setChecked(true);
+                        mDrawerLayout.closeDrawers();
+                        mTitle = getString(R.string.bip_blog);
 
                         break;
                 }
@@ -90,6 +127,14 @@ public class MainActivity extends AppCompatActivity {
         };
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!Util.netWorkCheck(getApplicationContext())) {
+            new AlertDialog.Builder(MainActivity.this).setTitle("Network Error").setMessage("ネットワークに接続できません。\nネットワーク設定を確認してください。").setCancelable(false).show();
+        }
     }
 
     @Override
