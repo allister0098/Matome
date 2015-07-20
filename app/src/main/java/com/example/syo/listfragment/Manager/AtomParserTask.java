@@ -8,6 +8,7 @@ import android.util.Xml;
 
 import com.example.syo.listfragment.Activity.MainActivity;
 import com.example.syo.listfragment.Adapter.ListAdapter;
+import com.example.syo.listfragment.Model.Content;
 import com.example.syo.listfragment.Model.Item;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -17,7 +18,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by syo on 2015/07/10.
@@ -101,14 +103,15 @@ public class AtomParserTask extends AsyncTask<String, Integer, ListAdapter> {
                                 String url = parser.getAttributeValue(null, "base");
                                 // <![CDATA[ の中身を取得
                                 String cdata = parser.nextText();
-                                // cdataの改行文字を削除
-                                if (cdata.contains("\n")) {
-                                    cdata = cdata.replace("\n", "");
-                                }
                                 // cdataから画像URLを抽出
-                                String result = cdata.substring(cdata.indexOf("src=\"")+5, cdata.indexOf("alt")-2);
-                                Log.d("IMAGE", result);
-
+                                Pattern imgPattern = Pattern.compile("http?://[\\w/:%#\\$&\\?\\(\\)~\\.=\\+\\-]+(jpg|png|gif)");
+                                Matcher image = imgPattern.matcher(cdata);
+                                String result;
+                                if (image.find()) {
+                                    result = image.group();
+                                } else {
+                                    result = Content.NO_IMAGE;
+                                }
                                 // それぞれのURLをitemにセット
                                 currentItem.setImgUrl(result);
                                 currentItem.setUrl(url);

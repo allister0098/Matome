@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.syo.listfragment.Fragment.RssFragment;
 import com.example.syo.listfragment.Model.Content;
@@ -22,13 +23,15 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView mNavigationView;
     private ActionBarDrawerToggle mDrawerToggle;
     private Fragment fragment;
+    private String mTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        toolbar.setTitle(R.string.mind_channel);
         setSupportActionBar(toolbar);
         final ActionBar actionBar = getSupportActionBar();
 
@@ -52,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
                         // DrawerLayoutを閉じる
                         menuItem.setChecked(true);
                         mDrawerLayout.closeDrawers();
+                        mTitle = getString(R.string.mind_channel);
 
                         break;
 
@@ -60,6 +64,16 @@ public class MainActivity extends AppCompatActivity {
                         // DrawerLayoutを閉じる
                         menuItem.setChecked(true);
                         mDrawerLayout.closeDrawers();
+                        mTitle = getString(R.string.philosophy_news);
+
+                        break;
+
+                    case R.id.navigation_item_3:
+                        fragment = new RssFragment(Content.ALFA_MOSAIC);
+                        // DrawerLayoutを閉じる
+                        menuItem.setChecked(true);
+                        mDrawerLayout.closeDrawers();
+                        mTitle = getString(R.string.alfa_mosaic);
 
                         break;
                 }
@@ -68,7 +82,12 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
+            public void onDrawerClosed(View view) {
+                toolbar.setTitle(mTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }

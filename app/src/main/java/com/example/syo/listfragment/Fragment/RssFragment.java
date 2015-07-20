@@ -71,6 +71,10 @@ public class RssFragment extends android.app.ListFragment implements SwipeRefres
                 case Content.MIND_MATOME :
                     rdfTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Content.MIND_MATOME);
                     break;
+
+                case Content.ALFA_MOSAIC :
+                    rdfTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Content.ALFA_MOSAIC);
+                    break;
             }
         }
     }

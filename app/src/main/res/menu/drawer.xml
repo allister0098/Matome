@@ -5,12 +5,16 @@
         <item
             android:id="@+id/navigation_item_1"
             android:checked="true"
-            android:icon="@mipmap/mind_channel"
+            android:icon="@mipmap/ic_launcher"
             android:title="@string/mind_channel"/>
         <item
             android:id="@+id/navigation_item_2"
             android:icon="@mipmap/icon"
             android:title="@string/philosophy_news"/>
+        <item
+            android:id="@+id/navigation_item_3"
+            android:icon="@mipmap/icon"
+            android:title="@string/alfa_mosaic"/>
 
     </group>
 </menu>

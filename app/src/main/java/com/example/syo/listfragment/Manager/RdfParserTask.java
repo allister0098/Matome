@@ -8,6 +8,7 @@ import android.util.Xml;
 import com.example.syo.listfragment.Activity.MainActivity;
 import com.example.syo.listfragment.Adapter.ListAdapter;
 import com.example.syo.listfragment.Fragment.RssFragment;
+import com.example.syo.listfragment.Model.Content;
 import com.example.syo.listfragment.Model.Item;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -16,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by syo on 2015/07/06.
@@ -93,22 +96,27 @@ public class RdfParserTask extends AsyncTask<String, Integer, ListAdapter> {
                         } else if (currentItem != null) {
                             if (tag.equals("title")) {
                                 currentItem.setTitle(parser.nextText());
+                            } else if (tag.equals("link")) {
+                                currentItem.setUrl(parser.nextText());
                             } else if (tag.equals("encoded")) {
 
                                 // <![CDATA[ の中身を取得
                                 String cdata = parser.nextText();
-                                // cdataから画像URLを抽出
-                                String result = cdata.substring(cdata.indexOf("src=\"")+5, cdata.indexOf("</a")-2);
-                                // cdataから記事のURLを取得
-                                String url = cdata.substring(cdata.indexOf("a href=\"")+8, cdata.indexOf("続きを読む")-2);
-                                // 画像URLをリファクタリング
-                                if (result.contains("\"")) {
-                                    result = result.replace(result.substring(result.indexOf("\""), result.length()), "");
+                                // 画像パターンの正規表現定義
+                                Pattern imgPattern = Pattern.compile("http?://[\\w/:%#\\$&\\?\\(\\)~\\.=\\+\\-]+(jpg|png|gif)");
+                                Matcher image = imgPattern.matcher(cdata);
+                                String result;
+
+                                if (image.find()) {
+                                    Log.d("image", image.group());
+                                    result = image.group();
+                                } else {
+                                    Log.d("Oops", "No match found");
+                                    result = Content.NO_IMAGE;
                                 }
 
                                 // それぞれのURLをitemにセット
                                 currentItem.setImgUrl(result);
-                                currentItem.setUrl(url);
                             }
                         }
                         break;
