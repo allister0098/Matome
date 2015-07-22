@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private Fragment fragment;
     private String mTitle;
+    private AlertDialog alertDialog;
+    private AlertDialog.Builder builder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,8 +145,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (!Util.netWorkCheck(getApplicationContext())) {
-            new AlertDialog.Builder(MainActivity.this).setTitle("Network Error").setMessage("ネットワークに接続できません。\nネットワーク設定を確認してください。").setCancelable(false).show();
+            alertDialog = new AlertDialog.Builder(MainActivity.this).setTitle("Network Error").setMessage("ネットワークに接続できません。\nネットワーク設定を確認してください。").setCancelable(false).show();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        alertDialog.dismiss();
     }
 
     @Override
