@@ -85,7 +85,7 @@ public class RssFragment extends android.app.ListFragment implements SwipeRefres
                     break;
 
                 case Content.HACHIMA_BLOG :
-                    rdfTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Content.HACHIMA_BLOG);
+                    rdfTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Content.BIP_BLOG);
                     break;
             }
         }

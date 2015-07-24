@@ -142,8 +142,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         if (!Util.netWorkCheck(getApplicationContext())) {
             alertDialog = new AlertDialog.Builder(MainActivity.this).setTitle("Network Error").setMessage("ネットワークに接続できません。\nネットワーク設定を確認してください。").setCancelable(false).show();
         }
@@ -152,7 +152,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        alertDialog.dismiss();
+        if (alertDialog != null) {
+            alertDialog.dismiss();
+        }
     }
 
     @Override
